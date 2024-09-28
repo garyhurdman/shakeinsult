@@ -1,0 +1,35 @@
+#include <windows.h>
+#include <string>
+
+void CopyToClipboard(const std::string& text) {
+    // Open the clipboard
+    if (OpenClipboard(nullptr)) {
+        // Empty the clipboard
+        EmptyClipboard();
+
+        // Allocate global memory for the text
+        HGLOBAL hGlobal = GlobalAlloc(GMEM_MOVEABLE, text.size() + 1);
+        if (hGlobal) {
+            // Lock the global memory and copy the text to it
+            char* pGlobal = static_cast<char*>(GlobalLock(hGlobal));
+            if (pGlobal) {
+                memcpy(pGlobal, text.c_str(), text.size() + 1);
+                GlobalUnlock(hGlobal);
+
+                // Set the clipboard data
+                SetClipboardData(CF_TEXT, hGlobal);
+            }
+        }
+
+        // Close the clipboard
+        CloseClipboard();
+    }
+}
+
+
+Severity	Code	Description	Project	File	Line	Suppression State	Details
+Error	LNK2028	unresolved token (0A000219) "extern "C" int __cdecl OpenClipboard(struct HWND__ *)" 
+(?OpenClipboard@@$$J0YAHPEAUHWND__@@@Z) referenced in function 
+"private: void __clrcall shakeinsult::MyForm::copyToClipboardToolStripMenuItem_Click(class System::Object ^,class System::EventArgs ^)" 
+(?copyToClipboardToolStripMenuItem_Click@MyForm@shakeinsult@@$$FAE$AAMXPE$AAVObject@System@@PE$AAVEventArgs@4@@Z)	
+shakeinsult	C:\Users\garyh\source\repos\shakeinsult\MyForm.obj	1		
